@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="BTManagerIOS">
+    <configurations>
+      <configuration name="BTManagerIOS" target-platform="Mobile" pure-as="true" main-class="ExampleManager" output-file="BTManagerIOS.swf" output-folder="$MODULE_DIR$/../../out/production/BTManagerIOS">
+        <dependencies target-player="19.0">
+          <entries>
+            <entry library-name="FPBluetooth" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="FPBluetoothManager" build-configuration-name="FPBluetoothManager">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK_19" />
+        </dependencies>
+        <compiler-options />
+        <packaging-air-desktop />
+        <packaging-android package-file-name="BTManagerIOS" />
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/ExampleManager-app.xml" package-file-name="BTManagerIOS">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/../sources/assets" path-in-package="." />
+          </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/../../../../../~iOS/SamDevelop(1-5).p12" provisioning-profile-path="$MODULE_DIR$/../../../../../~iOS/FlashPressAll.mobileprovision" />
+        </packaging-ios>
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="AIRSDK_19" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="FPBluetooth" level="project" />
+    <orderEntry type="module" module-name="FPBluetoothManager" exported="" />
+  </component>
+</module>

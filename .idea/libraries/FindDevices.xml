@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FindDevices" type="flex">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/ExamplesIDEA/sources/findDevices" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

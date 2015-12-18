@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="FindDevicesOSX">
+    <configurations>
+      <configuration name="FindDevicesOSX" target-platform="Desktop" pure-as="true" main-class="FindDevicesOSX" output-file="FindDevicesOSX.swf" output-folder="$MODULE_DIR$/../../out/production/FindDevicesOSX">
+        <dependencies target-player="19.0">
+          <entries>
+            <entry library-name="FindDevices" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="FPBluetoothManager" build-configuration-name="FPBluetoothManager">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="FPBluetooth" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK_19" />
+        </dependencies>
+        <compiler-options />
+        <packaging-air-desktop package-file-name="FindDevicesOSX" />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../sources/findDevices">
+      <sourceFolder url="file://$MODULE_DIR$/../sources/findDevices" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../sources/ui">
+      <sourceFolder url="file://$MODULE_DIR$/../sources/ui" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="AIRSDK_19" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="FindDevices" level="project" />
+    <orderEntry type="library" exported="" name="FPBluetooth" level="project" />
+    <orderEntry type="module" module-name="FPBluetoothManager" exported="" />
+    <orderEntry type="library" exported="" name="FPuiElements" level="project" />
+    <orderEntry type="library" exported="" name="FPShared" level="project" />
+  </component>
+</module>
