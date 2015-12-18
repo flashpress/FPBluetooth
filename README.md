@@ -1,5 +1,5 @@
 #FPBluetooth
-Bluetooth Low Energy on iOS & OSX.
+ANE library for Bluetooth Low Energy on iOS & OSX in AIR application
 
 #Extension ID
 ```
