@@ -9,4 +9,4 @@ ANE library for Bluetooth Low Energy on iOS & OSX in AIR application
 ```
 
 #Help
-Visit the [wiki page](https://github.com/flashpress/FPBluetooth/wiki) to help.
+Visit the [wiki page](https://github.com/flashpress/FPBluetooth/wiki) to get help.
