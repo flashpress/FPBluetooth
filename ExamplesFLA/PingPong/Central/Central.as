@@ -18,6 +18,8 @@ import flash.desktop.Clipboard;
 import flash.desktop.ClipboardFormats;
 import flash.utils.ByteArray;
 import ru.flashpress.bluetooth.events.FPCharacteristicEvent;
+import ru.flashpress.bluetooth.helpers.characteristic.FPCharacteristicWriteTypes;
+import flash.geom.Point;
 
 var logText:String = '';
 function log(...messages):void
@@ -35,12 +37,15 @@ function logTitle(...messages):void
 }
 
 copyButton.addEventListener(MouseEvent.CLICK, copyClickHandler);
-
 function copyClickHandler(event:MouseEvent):void
 {
 	Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, textField.text);
 }
 
+const SERVICE_UUID:String = 'E20A39F4-73F5-4BC4-A12F-17D1AD07A961';
+const CHARACTERISTIC_UUID:String = '08590F7E-DB05-467E-8757-72F6FAEB13D4';
+
+logTitle('Central App');
 
 var centralManager:FPCentralManager;
 function initBluetooth():void
@@ -50,7 +55,7 @@ function initBluetooth():void
 	var options:FPBluetoothOptions = new FPBluetoothOptions();
 	FPBluetooth.init(options);
     //
-    logTitle('--- FPBluetooth ---');
+    logTitle('FPBluetooth');
     log('   version:', FPBluetooth.VERSION+'.'+FPBluetooth.BUILD);
     log('   available:', FPBluetooth.available);
     log('   platform:', FPBluetooth.platform);
@@ -73,7 +78,7 @@ function managerUpdateStateHandler(event:FPBluetoothEvent):void
 function startScan():void
 {
 	var options:FPcmScanOptions = new FPcmScanOptions(true, null);
-	centralManager.startScan(options);
+	centralManager.startScan(options, SERVICE_UUID);
 }
 
 function peripheralDiscoverHandler(event:FPCentralManagerEvent):void
@@ -113,7 +118,7 @@ function discoverServices(device:FPPeripheral):void
 {
 	logTitle('discoverServices');
 	log('	device:', device.id);
-	device.discoverServiceUUIDs();
+	device.discoverServiceUUIDs(SERVICE_UUID);
 	device.addEventListener(FPPeripheralEvent.DISCOVER_SERVICES, discoverServicesHandler);
 }
 
@@ -139,10 +144,11 @@ function discoverCharacteristicFromService(service:FPService):void
 {
 	logTitle('discoverCharacteristicFromService');
 	log('	service:', service.id);
-	service.discoverCharacteristicUUIDs();
+	service.discoverCharacteristicUUIDs(CHARACTERISTIC_UUID);
 	service.addEventListener(FPServiceEvent.DISCOVER_CHARACTERISTICS, discoverCharacteristicsHandler);
 }
 
+var characteristic:FPCharacteristic;
 function discoverCharacteristicsHandler(event:FPServiceEvent):void
 {
 	logTitle('discoverCharacteristicsHandler');
@@ -150,35 +156,65 @@ function discoverCharacteristicsHandler(event:FPServiceEvent):void
 	var service:FPService = event.currentTarget as FPService;
 	log('	service:', service.id);
 	//
-	var list:Vector.<FPCharacteristic> = service.characteristics.list;
-	log('	characteristics list:', list);
-	//
-	var i:int;
-	var characteristic:FPCharacteristic;
-	for (i=0; i<list.length; i++) {
-		characteristic = list[i];
+	characteristic = service.characteristics.findByUUID(CHARACTERISTIC_UUID);
+	if (characteristic) {
+		characteristic.setNotify(true);
 		characteristic.addEventListener(FPCharacteristicEvent.UPDATE_BYTES, updateBytesHandler);
 	}
 }
 function updateBytesHandler(event:FPCharacteristicEvent):void
 {
 	logTitle('updateBytesHandler');
-	var characteristic:FPCharacteristic = event.currentTarget as FPCharacteristic;
-	log('	characteristic:', characteristic.id);
-	//
-	log('	bytesWaitRetrieve:', characteristic.streamIn.bytesWaitRetrieve);
-	log('	bytesAvailable:', characteristic.streamIn.bytesAvailable);
 	//
 	if (characteristic.streamIn.bytesWaitRetrieve) {
 		characteristic.streamIn.retrieve();
 	}
-	//
 	if (characteristic.streamIn.bytesAvailable) {
-		var bytes:ByteArray = new ByteArray();
-		characteristic.streamIn.readBytes(bytes);
-		//
-		log('	', bytes.readByte());
-		log('	', bytes.readUTFBytes(bytes.bytesAvailable));
+		readData();
 	}
 }
+
+var packSize:int = -1;
+function readData():void
+{
+	logTitle('readData');
+	while (1) {
+		log('	bytesAvailable:', characteristic.streamIn.bytesAvailable);
+		if (packSize == -1) {
+			if (characteristic.streamIn.bytesAvailable < 1) {
+				return;
+			}
+			packSize = characteristic.streamIn.readByte()-1;
+			log('	packSize:', packSize);
+		} else {
+			if (characteristic.streamIn.bytesAvailable < packSize) {
+				return;
+			}
+			var command:String = characteristic.streamIn.readUTFBytes(packSize);
+			packSize = -1;
+			log('	<font color="#ff0000">receive:'+command+'</font>');
+			switch (command) {
+				case 'ping':
+					log('	<font color="#0000ff">send:pong</font>');
+					packCommand('pong');
+					characteristic.writeValue(packBytes, FPCharacteristicWriteTypes.WITHOUT_RESPONSE);
+					break;
+			}
+		}
+	}
+}
+
+
+var packBytes:ByteArray = new ByteArray();
+function packCommand(cmd:String):void
+{
+	packBytes.position = 0;
+	packBytes.length = 0;
+	packBytes.writeByte(0);
+	packBytes.writeUTFBytes(cmd);
+	packBytes.position = 0;
+	packBytes.writeByte(packBytes.length);
+}
+
+
 
