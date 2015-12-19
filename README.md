@@ -1,4 +1,4 @@
-#FPBluetooth v2.41
+#FPBluetooth v2.43
 ANE library for Bluetooth Low Energy on iOS & OSX in AIR application
 
 #Extension ID
