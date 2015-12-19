@@ -16,6 +16,7 @@ import ru.flashpress.bluetooth.helpers.characteristic.FPCharacteristic;
 import flash.events.MouseEvent;
 import flash.desktop.Clipboard;
 import flash.desktop.ClipboardFormats;
+import flash.utils.ByteArray;
 
 var logText:String = '';
 function log(...messages):void
@@ -150,8 +151,24 @@ function discoverCharacteristicsHandler(event:FPServiceEvent):void
 	//
 	var list:Vector.<FPCharacteristic> = service.characteristics.list;
 	log('	characteristics list:', list);
+	//
+	var i:int;
+	var characteristic:FPCharacteristic;
+	for (i=0; i<list.length; i++) {
+		characteristic = list[i];
+		sendData(characteristic);
+	}
 }
 
+
+function sendData(characteristic:FPCharacteristic):void
+{
+	logTitle('sendData');
+	var bytes:ByteArray = new ByteArray();
+	bytes.writeByte(123);
+	bytes.writeUTFBytes('ping');
+	characteristic.streamOut.writeBytes(bytes);
+}
 
 
 
