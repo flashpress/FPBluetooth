@@ -144,15 +144,15 @@ package ru.flashpress.bluetooth.find.peripheral
 			drawBack();
 		}
 
-        private var poweredOn:Boolean;
+		private var poweredOn:Boolean;
 		public function updatePowered(poweredOn:Boolean):void
 		{
-            this.poweredOn = poweredOn;
-            if (!poweredOn) {
-                peripheral.cancelConnect();
-            } else {
-                setState(peripheral.connectingState);
-            }
+			this.poweredOn = poweredOn;
+			if (!poweredOn) {
+				peripheral.cancelConnect();
+			} else {
+				setState(peripheral.connectingState);
+			}
 		}
 		
 		private function connectedHandler(event:FPPeripheralEvent):void
@@ -173,61 +173,61 @@ package ru.flashpress.bluetooth.find.peripheral
 		{
 			log('updateConnectingStateHandler: '+peripheral.id);
 			log('  connectingState: '+FPPeripheralConnectingState.toString(peripheral.connectingState));
-            if (poweredOn) {
-                setState(peripheral.connectingState);
-            } else {
-                setState(FPPeripheralConnectingState.NONE);
-            }
+			if (poweredOn) {
+				setState(peripheral.connectingState);
+			} else {
+				setState(FPPeripheralConnectingState.NONE);
+			}
 		}
 
-        private function setState(state:int):void
-        {
-            switch (state) {
-                case FPPeripheralConnectingState.NONE:
-                    connectingStateLabel.text = 'NONE';
-                    connectingStateLabel.textColor = 0xff0000;
-                    notifyBoxes.enabled = false;
-                    connectButton.enabled = false;
-                    connectButton.label = 'connect';
-                    break;
-                case FPPeripheralConnectingState.DISCOVERED:
-                    connectingStateLabel.text = 'DISCOVERED';
-                    connectingStateLabel.textColor = 0x469ef0;
-                    notifyBoxes.enabled = true;
-                    connectButton.enabled = true;
-                    connectButton.label = 'connect';
-                    break;
-                case FPPeripheralConnectingState.CONNECTING:
-                    connectingStateLabel.text = 'CONNECTING';
-                    connectingStateLabel.textColor = 0x469ef0;
-                    notifyBoxes.enabled = false;
-                    connectButton.enabled = false;
-                    connectButton.label = 'connecting';
-                    break;
-                case FPPeripheralConnectingState.CONNECTED:
-                    connectingStateLabel.text = 'CONNECTED';
-                    connectingStateLabel.textColor = 0x009900;
-                    notifyBoxes.enabled = false;
-                    connectButton.enabled = true;
-                    connectButton.label = 'disconnect';
-                    break;
-                case FPPeripheralConnectingState.FAIL:
-                    connectingStateLabel.text = 'FAIL';
-                    connectingStateLabel.textColor = 0xff0000;
-                    notifyBoxes.enabled = true;
-                    connectButton.enabled = true;
-                    connectButton.label = 'connect';
-                    break;
-            }
-            if (state == FPPeripheralConnectingState.CONNECTED) {
-                discoverButton.enabled = true;
-                discoverListInput.enabled = true;
-            } else {
-                discoverButton.enabled = false;
-                discoverListInput.enabled = false;
-                servicesListBox.enabled = false;
-            }
-        }
+		private function setState(state:int):void
+		{
+			switch (state) {
+				case FPPeripheralConnectingState.NONE:
+					connectingStateLabel.text = 'NONE';
+					connectingStateLabel.textColor = 0xff0000;
+					notifyBoxes.enabled = false;
+					connectButton.enabled = false;
+					connectButton.label = 'connect';
+					break;
+				case FPPeripheralConnectingState.DISCOVERED:
+					connectingStateLabel.text = 'DISCOVERED';
+					connectingStateLabel.textColor = 0x469ef0;
+					notifyBoxes.enabled = true;
+					connectButton.enabled = true;
+					connectButton.label = 'connect';
+					break;
+				case FPPeripheralConnectingState.CONNECTING:
+					connectingStateLabel.text = 'CONNECTING';
+					connectingStateLabel.textColor = 0x469ef0;
+					notifyBoxes.enabled = false;
+					connectButton.enabled = false;
+					connectButton.label = 'connecting';
+					break;
+				case FPPeripheralConnectingState.CONNECTED:
+					connectingStateLabel.text = 'CONNECTED';
+					connectingStateLabel.textColor = 0x009900;
+					notifyBoxes.enabled = false;
+					connectButton.enabled = true;
+					connectButton.label = 'disconnect';
+					break;
+				case FPPeripheralConnectingState.FAIL:
+					connectingStateLabel.text = 'FAIL';
+					connectingStateLabel.textColor = 0xff0000;
+					notifyBoxes.enabled = true;
+					connectButton.enabled = true;
+					connectButton.label = 'connect';
+					break;
+			}
+			if (state == FPPeripheralConnectingState.CONNECTED) {
+				discoverButton.enabled = true;
+				discoverListInput.enabled = true;
+			} else {
+				discoverButton.enabled = false;
+				discoverListInput.enabled = false;
+				servicesListBox.enabled = false;
+			}
+		}
 		
 		private function connectClickHandler(event:MouseEvent):void
 		{

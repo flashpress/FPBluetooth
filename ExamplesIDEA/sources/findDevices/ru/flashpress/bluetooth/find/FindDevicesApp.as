@@ -6,13 +6,13 @@ package ru.flashpress.bluetooth.find
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	
+
 	import ru.flashpress.ane.queue.FPQueueData;
 	import ru.flashpress.ane.queue.FPQueueTypes;
 	import ru.flashpress.bluetooth.FPBluetooth;
 	import ru.flashpress.bluetooth.constants.FPbtState;
 	import ru.flashpress.bluetooth.data.FPBluetoothOptions;
-    import ru.flashpress.bluetooth.error.FPBluetoothError;
+	import ru.flashpress.bluetooth.error.FPBluetoothError;
 	import ru.flashpress.bluetooth.events.FPBluetoothEvent;
 	import ru.flashpress.bluetooth.find.peripheral.PeripheralsListView;
 	import ru.flashpress.bluetooth.managers.central.FPCentralManager;
@@ -48,6 +48,20 @@ package ru.flashpress.bluetooth.find
 			//
 			initBluetooth();
 		}
+		private var rootBox:VBox;
+		private var logView:LogBottomView;
+		private var queueInput:Input;
+		//
+		private var showAlertBox:CheckBox;
+		private var createButton:Button;
+		private var stateLabel:Label;
+		private var scanServicesOnlyInput:Input;
+		//
+		private var allowDuplicatesBox:CheckBox;
+		private var startScanButton:Button;
+		private var peripheralsListView:PeripheralsListView;
+		private var centralManager:FPCentralManager;
+		private var poweredOn:Boolean;
 		
 		private function initBluetooth():void
 		{
@@ -60,18 +74,6 @@ package ru.flashpress.bluetooth.find
             log('FPBluetooth, version:'+FPBluetooth.VERSION+', build:'+FPBluetooth.BUILD);
 		}
 		
-		private var rootBox:VBox;
-		private var logView:LogBottomView;
-		//
-		private var queueInput:Input;
-		private var showAlertBox:CheckBox;
-		private var createButton:Button;
-		private var stateLabel:Label;
-		//
-		private var scanServicesOnlyInput:Input;
-		private var allowDuplicatesBox:CheckBox;
-		private var startScanButton:Button;
-		private var peripheralsListView:PeripheralsListView;
 		private function createUI():void
 		{
 			var sensor:Sprite = new Sprite();
@@ -131,7 +133,7 @@ package ru.flashpress.bluetooth.find
 			sensor.addEventListener(MouseEvent.MOUSE_DOWN, downHandler);
 			rootBox.addEventListener(MouseEvent.MOUSE_DOWN, downHandler);
 		}
-		
+
 		private function stageResizeHandler(event:Event):void
 		{
 			var w:Number = Conf.width-rootBox.x*2;
@@ -145,7 +147,7 @@ package ru.flashpress.bluetooth.find
 			//
 			logView.resize(Conf.width, Conf.height);
 		}
-		
+
 		private function wheelHandler(event:MouseEvent):void
 		{
 			var ypos:Number = rootBox.y + event.delta*2;
@@ -153,6 +155,7 @@ package ru.flashpress.bluetooth.find
 			if (ypos > 0) ypos = 0;
 			rootBox.y = ypos;
 		}
+
 		private function downHandler(event:MouseEvent):void
 		{
 			if (rootBox.height < Conf.height) return;
@@ -161,18 +164,19 @@ package ru.flashpress.bluetooth.find
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, stageUpHandler);
 			this.stage.addEventListener(MouseEvent.MOUSE_MOVE, stageMoveHandler);
 		}
+		
 		private function stageMoveHandler(event:MouseEvent):void
 		{
 			event.updateAfterEvent();
 		}
+
 		private function stageUpHandler(event: MouseEvent):void
 		{
 			rootBox.stopDrag();
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, stageUpHandler);
 			this.stage.removeEventListener(MouseEvent.MOUSE_MOVE, stageMoveHandler);
 		}
-		
-		private var centralManager:FPCentralManager;
+
 		private function createClickHnadler(event:MouseEvent):void
 		{
 			log('create manager2');
@@ -187,12 +191,11 @@ package ru.flashpress.bluetooth.find
 			peripheralsListView.init(centralManager);
 		}
 
-        private var poweredOn:Boolean;
 		private function managerUpdateStateHandler(event:FPBluetoothEvent):void
 		{
 			log('managerUpdateStateHandler:', event.state);
-            poweredOn = centralManager.state == FPbtState.POWERED_ON;
-            peripheralsListView.updatePowered(poweredOn);
+			poweredOn = centralManager.state == FPbtState.POWERED_ON;
+			peripheralsListView.updatePowered(poweredOn);
 			if (poweredOn) {
 				startScanButton.enabled = true;
 				allowDuplicatesBox.enabled = true;
@@ -220,9 +223,9 @@ package ru.flashpress.bluetooth.find
 				case FPbtState.POWERED_OFF:
 					stateLabel.text = 'state: powered OFF';
 					stateLabel.textColor = 0xff0000;
-                    //
-                    startScanButton.label = 'start scan';
-                    centralManager.stopScan();
+					//
+					startScanButton.label = 'start scan';
+					centralManager.stopScan();
 					break;
 				case FPbtState.POWERED_ON:
 					stateLabel.text = 'state: powered on';
