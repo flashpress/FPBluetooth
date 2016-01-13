@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ui" type="flex">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/ExamplesIDEA/sources/ui" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
