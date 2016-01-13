@@ -49,6 +49,19 @@ package ru.flashpress.bluetooth.find.peripheral
 				rootBox.addChild(peripheralView);
 				peripheralsById[event.peripheral.id] = peripheralView;
 				peripheralView.width = _width;
+                peripheralView.updatePowered(poweredOn);
+			}
+		}
+
+        private var poweredOn:Boolean;
+		public function updatePowered(poweredOn:Boolean):void
+		{
+            this.poweredOn = poweredOn;
+			var key:String;
+			var peripheral:PeripheralView;
+			for (key in peripheralsById) {
+				peripheral = peripheralsById[key];
+				peripheral.updatePowered(poweredOn);
 			}
 		}
 	}

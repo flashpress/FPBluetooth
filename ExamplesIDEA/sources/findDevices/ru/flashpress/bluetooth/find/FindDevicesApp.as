@@ -54,6 +54,7 @@ package ru.flashpress.bluetooth.find
 			FPBluetooth.demo(this.stage);
 			//
 			var options:FPBluetoothOptions = new FPBluetoothOptions();
+			options.nativeLogEnabled = true;
 			FPBluetooth.init(options);
             //
             log('FPBluetooth, version:'+FPBluetooth.VERSION+', build:'+FPBluetooth.BUILD);
@@ -185,11 +186,14 @@ package ru.flashpress.bluetooth.find
 			centralManager.addEventListener(FPBluetoothEvent.UPDATE_STATE, managerUpdateStateHandler);
 			peripheralsListView.init(centralManager);
 		}
-		
+
+        private var poweredOn:Boolean;
 		private function managerUpdateStateHandler(event:FPBluetoothEvent):void
 		{
 			log('managerUpdateStateHandler:', event.state);
-			if (centralManager.state == FPbtState.POWERED_ON) {
+            poweredOn = centralManager.state == FPbtState.POWERED_ON;
+            peripheralsListView.updatePowered(poweredOn);
+			if (poweredOn) {
 				startScanButton.enabled = true;
 				allowDuplicatesBox.enabled = true;
 				scanServicesOnlyInput.enabled = true;
@@ -216,6 +220,9 @@ package ru.flashpress.bluetooth.find
 				case FPbtState.POWERED_OFF:
 					stateLabel.text = 'state: powered OFF';
 					stateLabel.textColor = 0xff0000;
+                    //
+                    startScanButton.label = 'start scan';
+                    centralManager.stopScan();
 					break;
 				case FPbtState.POWERED_ON:
 					stateLabel.text = 'state: powered on';
@@ -233,7 +240,7 @@ package ru.flashpress.bluetooth.find
 				startScanButton.label = 'stop scan';
 				allowDuplicatesBox.enabled = false;
 				//
-				var findServices:Array;
+				var findServices:Array = ['E20A39F4-73F5-4BC4-A12F-17D1AD07A961'];
 				if (scanServicesOnlyInput.text != '') {
 					findServices = [];
 					var temp:Array = scanServicesOnlyInput.text.split(',');
