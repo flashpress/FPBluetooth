@@ -4,3 +4,4 @@ out
 *.tmp
 *.app
 *.dSYM
+.idea/workspace.xml
